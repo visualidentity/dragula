@@ -428,7 +428,7 @@ function dragula (initialContainers, options) {
       return;
     }
     if (
-      reference === null ||
+      (reference === null && changed) || // https://github.com/bevacqua/dragula/pull/271 shadow logging fix
       reference !== item &&
       reference !== nextEl(item) &&
       reference !== _currentSibling
@@ -541,10 +541,11 @@ function touchy (el, op, type, fn) {
   crossvent[op](el, type, fn);
 }
 
+// https://github.com/bevacqua/dragula/issues/261 (IE9 fix)
 function whichMouseButton (e) {
   if (e.touches !== void 0) { return e.touches.length; }
+  if (e.which !== void 0 && e.which !== 0) { return e.which; }
   if (e.buttons !== void 0) { return e.buttons; }
-  if (e.which !== void 0) { return e.which; }
   var button = e.button;
   if (button !== void 0) { // see https://github.com/jquery/jquery/blob/99e8ff1baa7ae341e94bb89c3e84570c7c3ad9ea/src/event.js#L573-L575
     return button & 1 ? 1 : button & 2 ? 3 : (button & 4 ? 2 : 0);
